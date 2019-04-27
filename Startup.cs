@@ -22,7 +22,8 @@ namespace vega
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<VegaDbContext>(options => options.UseSqlServer(""));
+            var conn = Configuration.GetConnectionString("Default");
+            services.AddDbContext<VegaDbContext>(options => options.UseSqlServer(conn));
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
