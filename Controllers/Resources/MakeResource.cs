@@ -1,10 +1,10 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace vega.Controllers.Resources
 {
-    public class MakeResources
+    public class MakeResource
     {
         public int Id { get; set; }
 
@@ -12,7 +12,7 @@ namespace vega.Controllers.Resources
 
         public ICollection<ModelResource> Models { get; set; }
 
-        public MakeResources()
+        public MakeResource()
         {
             Models = new Collection<ModelResource>();
         }
