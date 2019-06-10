@@ -23,3 +23,4 @@ namespace vega.Controllers
             return await Task.FromResult(new[] { 1, 2, 3 });
         }
     }
+}
