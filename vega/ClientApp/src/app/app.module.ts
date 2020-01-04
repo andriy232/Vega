@@ -5,7 +5,7 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 import { HttpModule } from '@angular/http';
 
-import { MakeService } from './services/make.service';
+import { VehicleService } from "./services/VehicleService";
 
 import { AppComponent } from './app.component';
 import { NavMenuComponent } from './nav-menu/nav-menu.component';
@@ -36,7 +36,7 @@ import { VehicleFormComponent } from './vehicle-form/vehicle-form.component';
     ])
   ],
   providers: [
-    MakeService
+    VehicleService
   ],
   bootstrap: [AppComponent]
 })
