@@ -3,6 +3,9 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
+import { HttpModule } from '@angular/http';
+
+import { MakeService } from './services/make.service';
 
 import { AppComponent } from './app.component';
 import { NavMenuComponent } from './nav-menu/nav-menu.component';
@@ -22,7 +25,8 @@ import { VehicleFormComponent } from './vehicle-form/vehicle-form.component';
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
-    HttpClientModule,
+    HttpClientModule, 
+    HttpModule,
     FormsModule,
     RouterModule.forRoot([
       { path: '', component: HomeComponent, pathMatch: 'full' },
@@ -31,7 +35,9 @@ import { VehicleFormComponent } from './vehicle-form/vehicle-form.component';
       { path: 'vehicles/new', component: VehicleFormComponent }
     ])
   ],
-  providers: [],
+  providers: [
+    MakeService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
