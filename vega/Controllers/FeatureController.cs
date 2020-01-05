@@ -1,32 +1,21 @@
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using vega.Controllers.Resources;
 using vega.Models;
-using vega.Persistance;
 
 namespace vega.Controllers
 {
-    public class FeatureController
+    [Route("/api/vehicles")]
+    public class FeatureController : Controller
     {
-        private VegaDbContext _context;
-        private IMapper _mapper;
-
-        public FeatureController(VegaDbContext context, IMapper mapper)
+        [HttpPost]
+        public IActionResult CreateVehicle([FromBody]Vehicle vehicle)
         {
-            _context = context;
-            _mapper = mapper;
+            return Ok(vehicle);
         }
 
-        [HttpGet("/api/features")]
-        public async Task<IEnumerable<FeatureResource>> GetMakes()
+        [HttpGet]
+        public IActionResult GetVehicle()
         {
-            var makes = await _context.Features.ToListAsync();
-
-            return _mapper.Map<List<Feature>, List<FeatureResource>>(makes);
+            return Ok(1);
         }
     }
-
 }
