@@ -9,10 +9,10 @@ using vega.Persistance;
 
 namespace vega.Controllers
 {
-    public class MakesController
+    public class MakesController : Controller
     {
-        private VegaDbContext _context;
-        private IMapper _mapper;
+        private readonly VegaDbContext _context;
+        private readonly IMapper _mapper;
 
         public MakesController(VegaDbContext context, IMapper mapper)
         {
