@@ -2,9 +2,8 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
 
-namespace vega.Models
+namespace vega.Core.Models
 {
-
     public class Make
     {
         public int Id { get; set; }
