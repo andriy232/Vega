@@ -1,3 +1,4 @@
+using System;
 using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -6,6 +7,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
+using Sentry;
 using vega.Core;
 using vega.Persistance;
 
@@ -66,6 +69,35 @@ namespace vega
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller}/{action=Index}/{id?}");
+            });
+
+            // An example ASP.NET Core middleware that throws an
+            // exception when serving a request to path: /throw
+            app.Use(async (context, next) =>
+            {
+                var log = context.RequestServices.GetService<ILoggerFactory>()
+                    .CreateLogger<Startup>();
+
+                if (context.Request.Path == "/throw")
+                {
+                    var hub = context.RequestServices.GetService<IHub>();
+                    hub.ConfigureScope(s =>
+                    {
+                        // More data can be added to the scope like this:
+                        s.SetTag("Sample", "ASP.NET Core"); // indexed by Sentry
+                        s.SetExtra("Extra!", "Some extra information");
+                    });
+
+                    log.LogInformation("Logging info...");
+                    log.LogWarning("Logging some warning!");
+
+                    // The following exception will be captured by the SDK and the event
+                    // will include the Log messages and any custom scope modifications
+                    // as exemplified above.
+                    throw new Exception("An exception thrown from the ASP.NET Core pipeline");
+                }
+
+                await next();
             });
 
             app.UseSpa(spa =>

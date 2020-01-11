@@ -15,6 +15,7 @@ namespace vega
             return Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
+                    webBuilder.UseSentry();
                     webBuilder.UseKestrel();
                     webBuilder.UseStartup<Startup>();
                 });
