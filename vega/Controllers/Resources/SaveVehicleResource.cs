@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
+using Newtonsoft.Json;
 
 namespace vega.Controllers.Resources
 {
