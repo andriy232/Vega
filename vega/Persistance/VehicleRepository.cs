@@ -45,7 +45,10 @@ namespace vega.Persistance
 
         public async Task<List<Vehicle>> ListVehiclesAsync()
         {
-            return await _context.Vehicles.ToListAsync();
+            return await _context.Vehicles
+            .Include(v => v.Model).ThenInclude(m => m.Make)
+            .Include(v => v.Features).ThenInclude(vf => vf.Feature)
+            .ToListAsync();
         }
     }
 }
