@@ -13,7 +13,6 @@ export class VehicleListComponent implements OnInit {
   private readonly PAGE_SIZE = 3;
 
   vehicles: Vehicle[];
-  allVehicles: Vehicle[];
   makes: KeyValuePair[];
   filter: any = {};
 
@@ -39,21 +38,23 @@ export class VehicleListComponent implements OnInit {
   }
 
   private populateVehicles() {
-    this.vehicleService.getVehicles()
-      .subscribe(result => this.allVehicles = this.vehicles = result);
+    this.vehicleService.getVehicles(this.filter)
+      .subscribe(result => this.vehicles = result);
   }
 
   onFilterChange() {
-    var filteredVehicles = this.allVehicles;
-    if (this.filter.makeId)
-      filteredVehicles = filteredVehicles.filter(v => v.make.id == this.filter.makeId);
+    // client side filtering
 
-    if (this.filter.modelId)
-      filteredVehicles = filteredVehicles.filter(v => v.model.id == this.filter.modelId);
-
-    this.vehicles = filteredVehicles;
+    //var filteredVehicles = this.allVehicles;
+    //if (this.filter.makeId)
+    //  filteredVehicles = filteredVehicles.filter(v => v.make.id == this.filter.makeId);
+    //
+    //if (this.filter.modelId)
+    //  filteredVehicles = filteredVehicles.filter(v => v.model.id == this.filter.modelId);
+    
+    //this.vehicles = filteredVehicles;
     //this.query.page = 1;
-    //this.populateVehicles();
+    this.populateVehicles();
   }
 
   resetFilter() {

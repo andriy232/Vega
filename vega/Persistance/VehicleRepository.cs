@@ -1,14 +1,25 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using vega.Core;
 using vega.Core.Models;
+using vega.Extensions;
 
 namespace vega.Persistance
 {
     public class VehicleRepository : IVehicleRepository
     {
         private readonly VegaDbContext _context;
+
+        private Dictionary<string, Expression<Func<Vehicle, object>>> columnsMap = new Dictionary<string, Expression<Func<Vehicle, object>>>()
+        {
+            ["make"] = v => v.Model.Make.Name,
+            ["model"] = v => v.Model.Name,
+            ["contactName"] = v => v.ContactName
+        };
 
         public VehicleRepository(VegaDbContext context)
         {
@@ -43,12 +54,22 @@ namespace vega.Persistance
             _context.Remove(vehicle);
         }
 
-        public async Task<List<Vehicle>> ListVehiclesAsync()
+        public async Task<List<Vehicle>> ListVehiclesAsync(VehicleQuery queryObj = null)
         {
-            return await _context.Vehicles
+            var query = _context.Vehicles
             .Include(v => v.Model).ThenInclude(m => m.Make)
             .Include(v => v.Features).ThenInclude(vf => vf.Feature)
-            .ToListAsync();
+            .AsQueryable();
+
+            if (queryObj != null && queryObj.MakeId.HasValue)
+                query = query.Where(v => v.Model.MakeId == queryObj.MakeId.Value);
+
+            if (queryObj != null && queryObj.ModelId.HasValue)
+                query = query.Where(v => v.Model.Id == queryObj.ModelId.Value);
+
+            query = query.ApplyOrdering(queryObj, columnsMap);
+
+            return await query.ToListAsync();
         }
     }
 }
