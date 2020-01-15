@@ -10,6 +10,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Sentry;
 using vega.Core;
+using Vega.Core.Models;
 using vega.Persistance;
 
 namespace vega
@@ -28,9 +29,12 @@ namespace vega
         {
             services.AddAutoMapper(typeof(Startup));
 
+            services.Configure<PhotoSettings>(Configuration.GetSection("PhotoSettings"));
+
             var connectionString = Configuration.GetConnectionString("Default");
             services.AddDbContext<VegaDbContext>(options => options.UseSqlServer(connectionString));
             services.AddScoped<IVehicleRepository, VehicleRepository>();
+            services.AddScoped<IPhotoRepository, PhotoRepository>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             services.AddControllersWithViews().AddNewtonsoftJson();

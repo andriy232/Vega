@@ -14,12 +14,13 @@ namespace vega.Persistance
     {
         private readonly VegaDbContext _context;
 
-        private Dictionary<string, Expression<Func<Vehicle, object>>> columnsMap = new Dictionary<string, Expression<Func<Vehicle, object>>>()
-        {
-            ["make"] = v => v.Model.Make.Name,
-            ["model"] = v => v.Model.Name,
-            ["contactName"] = v => v.ContactName
-        };
+        private readonly Dictionary<string, Expression<Func<Vehicle, object>>> _columnsMap =
+            new Dictionary<string, Expression<Func<Vehicle, object>>>
+            {
+                ["make"] = v => v.Model.Make.Name,
+                ["model"] = v => v.Model.Name,
+                ["contactName"] = v => v.ContactName
+            };
 
         public VehicleRepository(VegaDbContext context)
         {
@@ -32,11 +33,11 @@ namespace vega.Persistance
                 return await _context.Vehicles.FindAsync(id);
 
             return await _context.Vehicles
-            .Include(v => v.Features)
-            .ThenInclude(vf => vf.Feature)
-           .Include(v => v.Model)
-            .ThenInclude(m => m.Make)
-           .SingleOrDefaultAsync(v => v.Id == id);
+                .Include(v => v.Features)
+                .ThenInclude(vf => vf.Feature)
+                .Include(v => v.Model)
+                .ThenInclude(m => m.Make)
+                .SingleOrDefaultAsync(v => v.Id == id);
         }
 
         public async Task<Model> FindModelAsync(int id)
@@ -57,9 +58,9 @@ namespace vega.Persistance
         public async Task<QueryResult<Vehicle>> ListVehiclesAsync(VehicleQuery queryObj = null)
         {
             var queryItems = _context.Vehicles
-            .Include(v => v.Model).ThenInclude(m => m.Make)
-            .Include(v => v.Features).ThenInclude(vf => vf.Feature)
-            .AsQueryable();
+                .Include(v => v.Model).ThenInclude(m => m.Make)
+                .Include(v => v.Features).ThenInclude(vf => vf.Feature)
+                .AsQueryable();
 
             if (queryObj != null)
             {
@@ -69,10 +70,10 @@ namespace vega.Persistance
                 if (queryObj.ModelId.HasValue)
                     queryItems = queryItems.Where(v => v.Model.Id == queryObj.ModelId.Value);
 
-                queryItems = queryItems.ApplyOrdering(queryObj, columnsMap);
+                queryItems = queryItems.ApplyOrdering(queryObj, _columnsMap);
             }
 
-            var result = new QueryResult<Vehicle>()
+            var result = new QueryResult<Vehicle>
             {
                 TotalItems = await queryItems.CountAsync()
             };
