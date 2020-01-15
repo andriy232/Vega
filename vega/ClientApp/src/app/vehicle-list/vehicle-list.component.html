@@ -6,7 +6,7 @@
         <div class="col-md">
             <div class="well">
                 <div class="form-group">
-                    <select id="make" class="form-control" [(ngModel)]="filter.makeId" (change)="onFilterChange()">
+                    <select id="make" class="form-control" [(ngModel)]="query.makeId" (change)="onFilterChange()">
                         <option value=""></option>
                         <option *ngFor="let m of makes" value="{{ m.id }}">{{ m.name }}</option>
                     </select>
@@ -29,8 +29,7 @@
     <thead>
         <tr>
             <th *ngFor="let c of columns">
-                <div *ngIf="c.isSortable" (click)="sortBy(c.key)">
-                    {{ c.title }}
+                <div *ngIf="c.isSortable" (click)="sortBy(c.key)">{{ c.title }}
                     <i *ngIf="query.sortBy === c.key" class="fa" [class.fa-sort-asc]="query.isSortAscending"
                         [class.fa-sort-desc]="!query.isSortAscending"></i>
                 </div>
@@ -41,7 +40,7 @@
         </tr>
     </thead>
     <tbody>
-        <tr *ngFor="let v of vehicles">
+        <tr *ngFor="let v of queryResult.items">
             <td>{{ v.id }}</td>
             <td>{{ v.contact.name }}</td>
             <td>{{ v.make.name }}</td>
@@ -52,4 +51,4 @@
         </tr>
     </tbody>
 </table>
-<!-- <pagination [total-items]="queryResult.totalItems" [page-size]="query.pageSize" (page-changed)="onPageChange($event)"></pagination> -->
+<pagination [total-items]="queryResult.totalItems" [page-size]="query.pageSize" (page-changed)="onPageChange($event)"></pagination>

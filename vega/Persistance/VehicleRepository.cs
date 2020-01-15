@@ -54,22 +54,36 @@ namespace vega.Persistance
             _context.Remove(vehicle);
         }
 
-        public async Task<List<Vehicle>> ListVehiclesAsync(VehicleQuery queryObj = null)
+        public async Task<QueryResult<Vehicle>> ListVehiclesAsync(VehicleQuery queryObj = null)
         {
-            var query = _context.Vehicles
+            var queryItems = _context.Vehicles
             .Include(v => v.Model).ThenInclude(m => m.Make)
             .Include(v => v.Features).ThenInclude(vf => vf.Feature)
             .AsQueryable();
 
-            if (queryObj != null && queryObj.MakeId.HasValue)
-                query = query.Where(v => v.Model.MakeId == queryObj.MakeId.Value);
+            if (queryObj != null)
+            {
+                if (queryObj.MakeId.HasValue)
+                    queryItems = queryItems.Where(v => v.Model.MakeId == queryObj.MakeId.Value);
 
-            if (queryObj != null && queryObj.ModelId.HasValue)
-                query = query.Where(v => v.Model.Id == queryObj.ModelId.Value);
+                if (queryObj.ModelId.HasValue)
+                    queryItems = queryItems.Where(v => v.Model.Id == queryObj.ModelId.Value);
 
-            query = query.ApplyOrdering(queryObj, columnsMap);
+                queryItems = queryItems.ApplyOrdering(queryObj, columnsMap);
+            }
 
-            return await query.ToListAsync();
+            var result = new QueryResult<Vehicle>()
+            {
+                TotalItems = await queryItems.CountAsync()
+            };
+
+            if (queryObj != null)
+            {
+                queryItems = queryItems.ApplyPaging(queryObj);
+            }
+
+            result.Items = await queryItems.ToListAsync();
+            return result;
         }
     }
 }

@@ -10,6 +10,6 @@ namespace vega.Core
         Task<Vehicle> GetVehicleAsync(int id, bool includeRelated = true);
         void RemoveVehicle(Vehicle vehicle);
         Task<Model> FindModelAsync(int id);
-        Task<List<Vehicle>> ListVehiclesAsync(VehicleQuery filter = null);
+        Task<QueryResult<Vehicle>> ListVehiclesAsync(VehicleQuery queryObj = null);
     }
 }

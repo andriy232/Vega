@@ -1,4 +1,3 @@
-import { PaginationModule } from 'ng2-bootstrap/pagination';
 import { Component, OnInit } from '@angular/core';
 import { Vehicle } from '../models/Vehicle';
 import { VehicleService } from '../services/VehicleService';
@@ -12,14 +11,13 @@ import { KeyValuePair } from '../models/KeyValuePair';
 export class VehicleListComponent implements OnInit {
   private readonly PAGE_SIZE = 3;
 
-  vehicles: Vehicle[];
   makes: KeyValuePair[];
-  filter: any = {};
-
   queryResult: any = {};
+
   query: any = {
     pageSize: this.PAGE_SIZE
   };
+
   columns = [
     { title: 'Id' },
     { title: 'Contact Name', key: 'contactName', isSortable: true },
@@ -38,34 +36,21 @@ export class VehicleListComponent implements OnInit {
   }
 
   private populateVehicles() {
-    this.vehicleService.getVehicles(this.filter)
-      .subscribe(result => this.vehicles = result);
+    this.vehicleService.getVehicles(this.query)
+      .subscribe(result => this.queryResult = result);
   }
 
   onFilterChange() {
-    // client side filtering
-
-    //var filteredVehicles = this.allVehicles;
-    //if (this.filter.makeId)
-    //  filteredVehicles = filteredVehicles.filter(v => v.make.id == this.filter.makeId);
-    //
-    //if (this.filter.modelId)
-    //  filteredVehicles = filteredVehicles.filter(v => v.model.id == this.filter.modelId);
-    
-    //this.vehicles = filteredVehicles;
-    //this.query.page = 1;
+    this.query.page = 1;
     this.populateVehicles();
   }
 
   resetFilter() {
-    this.filter = {};
-    this.onFilterChange();
-
     this.query = {
       page: 1,
       pageSize: this.PAGE_SIZE
     };
-    //this.populateVehicles();
+    this.onFilterChange();
   }
 
   sortBy(columnName) {

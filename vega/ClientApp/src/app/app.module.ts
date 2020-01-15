@@ -7,8 +7,6 @@ import { HttpModule } from '@angular/http';
 import { ToastyModule } from 'ng2-toasty';
 import { VehicleService } from "./services/VehicleService";
 import * as Sentry from '@sentry/browser';
-import { PaginationModule } from 'ng2-bootstrap/pagination';
-import { NgxPaginationModule } from 'ngx-pagination';
 
 import { AppComponent } from './app.component';
 import { NavMenuComponent } from './nav-menu/nav-menu.component';
@@ -18,6 +16,7 @@ import { FetchDataComponent } from './fetch-data/fetch-data.component';
 import { VehicleFormComponent } from './vehicle-form/vehicle-form.component';
 import { AppErrorHandler } from './app.error-handler';
 import { VehicleListComponent } from './vehicle-list/vehicle-list.component';
+import { PaginationComponent } from './shared/pagination.component';
 
 Sentry.init({
   dsn: "https://0df0c7e86716463891cfe42dffb9130b@sentry.io/1878365"
@@ -31,16 +30,15 @@ Sentry.init({
     CounterComponent,
     FetchDataComponent,
     VehicleFormComponent,
-    VehicleListComponent
+    VehicleListComponent,
+    PaginationComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
     HttpClientModule,
     ToastyModule.forRoot(),
-    PaginationModule.forRoot(),
     HttpModule,
     FormsModule,
-    NgxPaginationModule,
     RouterModule.forRoot([
       { path: '', redirectTo: 'vehicles', pathMatch: 'full' },
       { path: 'counter', component: CounterComponent },
