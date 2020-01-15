@@ -1,7 +1,8 @@
 <h1>Vehicle</h1>
-<mat-tab-group>
-    <mat-tab label="Basic information" *ngIf="vehicle">
+<mat-tab-group  *ngIf="vehicle">
+    <mat-tab label="Basic information">
         <!-- Vehicle tab -->
+        <br />
         <h2>Basics</h2>
         <ul>
             <li>Make: {{ vehicle.make.name }}</li>
@@ -19,11 +20,17 @@
             <li>Contact Email: {{ vehicle.contact.email }}</li>
         </ul>
         <br />
-        <p>
-            <a class="btn btn-primary" [routerLink]="['/vehicles/edit/', vehicle.id]">Edit</a>
-            <button class="btn btn-danger" (click)="delete()">Delete</button>
-            <a class="btn btn-light" [routerLink]="['/vehicles']">View All Vehicles</a>
-        </p>
+        <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+            <div class="btn-group mr-2" role="group" aria-label="First group">
+                <button class="btn btn-primary" [routerLink]="['/vehicles/edit/', vehicle.id]">Edit</button>
+            </div>
+            <div class="btn-group mr-2" role="group" aria-label="Second group">
+                <button class="btn btn-danger" (click)="delete()">Delete</button>
+            </div>
+            <div class="btn-group mr-2" role="group" aria-label="Third group">
+                <button class="btn btn-light" [routerLink]="['/vehicles']">View All Vehicles</button>
+            </div>
+        </div>
     </mat-tab>
     <mat-tab label="Photos">
         <!-- Photos tab -->
