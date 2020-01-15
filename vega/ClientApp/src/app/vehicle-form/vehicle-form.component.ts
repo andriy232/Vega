@@ -17,6 +17,7 @@ export class VehicleFormComponent implements OnInit {
   makes: any[];
   models: any[];
   features: any[];
+
   vehicle: SaveVehicle = {
     id: 0,
     makeId: 0,
@@ -37,7 +38,7 @@ export class VehicleFormComponent implements OnInit {
     private toastyService: ToastyService) {
 
     route.params.subscribe(p => {
-      this.vehicle.id = +p['id'];
+      this.vehicle.id = +p['id'] || 0;
     });
   }
 
@@ -53,10 +54,13 @@ export class VehicleFormComponent implements OnInit {
 
     Observable.forkJoin(sources)
       .subscribe(data => {
+
         this.makes = data[0];
         this.features = data[1];
+
         if (this.vehicle.id)
           this.setVehicle(data[2]);
+
         this.populateModels();
       }, err => {
         if (err.status == 404) {
@@ -96,40 +100,21 @@ export class VehicleFormComponent implements OnInit {
   }
 
   submit() {
-    if (this.vehicle.id) {
-      this.vehicleService.update(this.vehicle)
-        .subscribe(x => {
-          this.toastyService.success({
-            title: 'Success',
-            msg: 'The vehicle was successfully updated.',
-            theme: 'bootstrap',
-            showClose: true,
-            timeout: 5000
-          });
-        });
-    }
-    else {
-      this.vehicle.id = 0;
-      this.vehicleService.create(this.vehicle)
-        .subscribe(x => {
-          this.toastyService.success({
-            title: 'Success',
-            msg: 'The vehicle was successfully created.',
-            theme: 'bootstrap',
-            showClose: true,
-            timeout: 5000
-          });
-        }
-        );
-    }
-  }
+    var result$ = this.vehicle.id ?
+      this.vehicleService.update(this.vehicle) :
+      this.vehicleService.create(this.vehicle);
 
-  delete() {
-    if (confirm("Are you sure to delete that vehicle?")) {
-      this.vehicleService.deleteVehicle(this.vehicle.id)
-        .subscribe(x => {
-          this.router.navigate(['/']);
-        });
-    }
+    result$.subscribe(x => {
+
+      this.toastyService.success({
+        title: 'Success',
+        msg: 'Data was successfully saved.',
+        theme: 'bootstrap',
+        showClose: true,
+        timeout: 5000
+      });
+
+      this.router.navigate(['/vehicles/', this.vehicle.id]);
+    });
   }
 }

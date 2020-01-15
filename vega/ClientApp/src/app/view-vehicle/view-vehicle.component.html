@@ -1,0 +1,32 @@
+<h1>Vehicle</h1>
+<mat-tab-group>
+    <mat-tab label="Basic information" *ngIf="vehicle">
+        <!-- Vehicle tab -->
+        <h2>Basics</h2>
+        <ul>
+            <li>Make: {{ vehicle.make.name }}</li>
+            <li>Model: {{ vehicle.model.name }}</li>
+            <li>Registered: {{ vehicle.isRegistered ? 'Yes' : 'No' }}
+        </ul>
+        <h2>Features</h2>
+        <ul>
+            <li *ngFor="let f of vehicle.features">{{ f.name }}</li>
+        </ul>
+        <h2>Contact</h2>
+        <ul>
+            <li>Contact Name: {{ vehicle.contact.name }}</li>
+            <li>Contact Phone: {{ vehicle.contact.phone }}</li>
+            <li>Contact Email: {{ vehicle.contact.email }}</li>
+        </ul>
+        <br />
+        <p>
+            <a class="btn btn-primary" [routerLink]="['/vehicles/edit/', vehicle.id]">Edit</a>
+            <button class="btn btn-danger" (click)="delete()">Delete</button>
+            <a class="btn btn-light" [routerLink]="['/vehicles']">View All Vehicles</a>
+        </p>
+    </mat-tab>
+    <mat-tab label="Photos">
+        <!-- Photos tab -->
+        <h2>Photos</h2>
+    </mat-tab>
+</mat-tab-group>
