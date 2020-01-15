@@ -8,8 +8,7 @@ import { SaveVehicle } from '../models/SaveVehicle';
 })
 export class VehicleService {
 
-    private readonly endpoint = '/api/vehicles';
-    private readonly endpointWithSlash = this.endpoint + "/";
+    private readonly vehicleEndpoint = '/api/vehicles';
 
     constructor(private http: Http) {
     }
@@ -25,23 +24,28 @@ export class VehicleService {
     }
 
     create(vehicle) {
-        return this.http.post(this.endpoint, vehicle)
+        return this.http.post(this.vehicleEndpoint, vehicle)
             .map(res => res.json());
     }
 
     update(vehicle: SaveVehicle) {
-        return this.http.put(this.endpointWithSlash + vehicle.id, vehicle)
+        return this.http.put(`${this.vehicleEndpoint}/${vehicle.id}`, vehicle)
+            .map(res => res.json());
+    }
+
+    deleteVehicle(id) {
+        return this.http.delete(`${this.vehicleEndpoint}/${id}`)
             .map(res => res.json());
     }
 
     getVehicle(id) {
-        return this.http.get(this.endpointWithSlash + id)
+        return this.http.get(`${this.vehicleEndpoint}/${id}`)
             .map(res => res.json());
     }
 
     getVehicles(filter) {
         return this.http
-            .get(this.endpoint + '?' + this.toQueryString(filter))
+            .get(`${this.vehicleEndpoint}?${this.toQueryString(filter)}`)
             .map(res => res.json());
     }
 
@@ -55,10 +59,5 @@ export class VehicleService {
         }
 
         return parts.join('&');
-    }
-
-    deleteVehicle(id) {
-        return this.http.delete(this.endpointWithSlash + id)
-            .map(res => res.json());
     }
 }

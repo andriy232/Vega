@@ -1,5 +1,5 @@
 <h1>Vehicle</h1>
-<mat-tab-group  *ngIf="vehicle">
+<mat-tab-group *ngIf="vehicle">
     <mat-tab label="Basic information">
         <!-- Vehicle tab -->
         <br />
@@ -35,5 +35,7 @@
     <mat-tab label="Photos">
         <!-- Photos tab -->
         <h2>Photos</h2>
+        <input type="file" (change)="uploadPhoto()" #fileInput>
+        <img *ngFor="let photo of photos" src="/uploads/{{ photo.fileName }}" class="img-thumbnail">
     </mat-tab>
 </mat-tab-group>

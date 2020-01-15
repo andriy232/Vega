@@ -11,6 +11,7 @@ import { ToastyModule } from 'ng2-toasty';
 import * as Sentry from '@sentry/browser';
 
 import { VehicleService } from "./services/VehicleService";
+import { PhotoService } from "./services/PhotoService";
 import { AppComponent } from './app.component';
 import { NavMenuComponent } from './nav-menu/nav-menu.component';
 import { HomeComponent } from './home/home.component';
@@ -60,6 +61,7 @@ Sentry.init({
   ],
   providers: [
     VehicleService,
+    PhotoService,
     { provide: ErrorHandler, useClass: AppErrorHandler }
   ],
   bootstrap: [AppComponent]
