@@ -10,12 +10,6 @@ export class AppErrorHandler implements ErrorHandler {
     }
 
     handleError(error: any): void {
-        if (!isDevMode()) {
-            const eventId = Sentry.captureException(error.originalError || error);
-            Sentry.showReportDialog({ eventId });
-        }
-        else
-            throw error;
 
         this.ngZone.run(() => {
             this.toastyService.error({
@@ -26,5 +20,12 @@ export class AppErrorHandler implements ErrorHandler {
                 timeout: 5000
             });
         });
+
+        if (!isDevMode()) {
+            const eventId = Sentry.captureException(error.originalError || error);
+            Sentry.showReportDialog({ eventId });
+        }
+        else
+            throw error;
     }
 }
