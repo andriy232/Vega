@@ -1,6 +1,6 @@
 using System;
 
-namespace vega
+namespace Vega.Core.Models
 {
     public class WeatherForecast
     {

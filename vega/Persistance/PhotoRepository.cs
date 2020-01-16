@@ -3,7 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using vega.Core;
-using vega.Core.Models;
+using Vega.Core.Models;
 
 namespace vega.Persistance
 {
@@ -15,6 +15,7 @@ namespace vega.Persistance
         {
             _context = context;
         }
+
         public async Task<IEnumerable<Photo>> GetPhotosAsync(int vehicleId)
         {
             return await _context.Photos.Where(x => x.VehicleId == vehicleId).ToListAsync();

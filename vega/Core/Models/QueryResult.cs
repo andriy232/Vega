@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace vega.Core.Models
+namespace Vega.Core.Models
 {
     public class QueryResult<T>
     {

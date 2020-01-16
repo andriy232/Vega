@@ -5,7 +5,7 @@ using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using vega.Core;
-using vega.Core.Models;
+using Vega.Core.Models;
 using vega.Extensions;
 
 namespace vega.Persistance

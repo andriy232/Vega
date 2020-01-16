@@ -2,18 +2,14 @@ using AutoMapper;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore.Internal;
 using vega.Controllers.Resources;
 using vega.Core;
-using vega.Core.Models;
-using vega.Persistance;
-using System.Linq;
-using Microsoft.Extensions.Options;
 using Vega.Core.Models;
-using System.Collections.Generic;
 
 namespace vega.Controllers
 {
@@ -51,6 +47,7 @@ namespace vega.Controllers
                 return BadRequest("Empty file");
             if (file.Length > _photoSettings.MaxBytes)
                 return BadRequest("Maximum file size exceeded!");
+
             var extension = Path.GetExtension(file.FileName);
             if (!_photoSettings.IsSupported(extension))
                 return BadRequest("Not allowed file type!");

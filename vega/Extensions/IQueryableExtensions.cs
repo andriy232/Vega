@@ -9,11 +9,12 @@ namespace vega.Extensions
     {
         public static IQueryable<T> ApplyOrdering<T>(
             this IQueryable<T> query,
-         IQueryObject queryObj,
-        Dictionary<string, Expression<Func<T, object>>> columnsMap)
+            IQueryObject queryObj,
+            Dictionary<string, Expression<Func<T, object>>> columnsMap)
         {
             if (!string.IsNullOrWhiteSpace(queryObj?.SortBy) && columnsMap.TryGetValue(queryObj.SortBy, out var exp))
                 query = queryObj.IsSortAscending ? query.OrderBy(exp) : query.OrderByDescending(exp);
+
             return query;
         }
 

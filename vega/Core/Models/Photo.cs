@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace vega.Core.Models
+namespace Vega.Core.Models
 {
     public class Photo
     {
