@@ -1,5 +1,5 @@
-using System;
 using AutoMapper;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.SpaServices.AngularCli;
@@ -9,9 +9,10 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Sentry;
+using System;
 using vega.Core;
-using Vega.Core.Models;
 using vega.Persistance;
+using Vega.Core.Models;
 
 namespace vega
 {
@@ -33,11 +34,22 @@ namespace vega
 
             var connectionString = Configuration.GetConnectionString("Default");
             services.AddDbContext<VegaDbContext>(options => options.UseSqlServer(connectionString));
+
             services.AddScoped<IVehicleRepository, VehicleRepository>();
             services.AddScoped<IPhotoRepository, PhotoRepository>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 
-            services.AddControllersWithViews().AddNewtonsoftJson();
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer(options =>
+            {
+                options.Authority = Configuration["Auth0:Domain"];
+                options.Audience = Configuration["Auth0:Audience"];
+            });
+
+            services.AddControllers().AddNewtonsoftJson();
             // In production, the Angular files will be served from this directory
             services.AddSpaStaticFiles(configuration => { configuration.RootPath = "ClientApp/dist"; });
         }
@@ -58,13 +70,20 @@ namespace vega
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-            if (!env.IsDevelopment())
-            {
-                app.UseSpaStaticFiles();
-            }
 
+            if (!env.IsDevelopment())
+                app.UseSpaStaticFiles();
+
+            // order is important, so 1.
             app.UseRouting();
 
+            // 2. authentication and authorization
+            app.UseAuthentication();
+
+            // 2.1 !!! extreme attention to order !!!
+            app.UseAuthorization();
+
+            // 3. UseEndpoint
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(

@@ -1,4 +1,5 @@
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
@@ -69,6 +70,7 @@ namespace vega.Controllers
             ]
         }
         */
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> CreateVehicle([FromBody] SaveVehicleResource vehicleResource)
         {
@@ -94,6 +96,7 @@ namespace vega.Controllers
             return Ok(result);
         }
 
+        [Authorize]
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateVehicle(int id, [FromBody] SaveVehicleResource vehicleResource)
         {
@@ -115,6 +118,7 @@ namespace vega.Controllers
             return Ok(result);
         }
 
+        [Authorize]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteVehicle(int id)
         {

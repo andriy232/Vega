@@ -14,6 +14,7 @@ import { BrowserXhrWithProgress } from './services/BrowserXhrWithProgress';
 import { ProgressService } from "./services/ProgressService";
 import { VehicleService } from "./services/VehicleService";
 import { PhotoService } from "./services/PhotoService";
+import { AuthService } from "./services/AuthService";
 
 import { AppComponent } from './app.component';
 import { NavMenuComponent } from './nav-menu/nav-menu.component';
@@ -25,6 +26,7 @@ import { VehicleListComponent } from './vehicle-list/vehicle-list.component';
 import { ViewVehicleComponent } from './view-vehicle/view-vehicle.component';
 import { PaginationComponent } from './shared/pagination.component';
 import { AppErrorHandler } from './app.error-handler';
+import { ViewProfileComponent } from './view-profile/view-profile.component';
 
 Sentry.init({
   dsn: "https://0df0c7e86716463891cfe42dffb9130b@sentry.io/1878365"
@@ -40,7 +42,8 @@ Sentry.init({
     VehicleFormComponent,
     VehicleListComponent,
     PaginationComponent,
-    ViewVehicleComponent
+    ViewVehicleComponent,
+    ViewProfileComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -59,13 +62,15 @@ Sentry.init({
       { path: 'vehicles/new', component: VehicleFormComponent },
       { path: 'vehicles/edit/:id', component: VehicleFormComponent },
       { path: 'vehicles/:id', component: ViewVehicleComponent },
-      { path: 'vehicles', component: VehicleListComponent }
+      { path: 'vehicles', component: VehicleListComponent },
+      { path: 'profile', component: ViewProfileComponent }
     ])
   ],
   providers: [
     VehicleService,
     ProgressService,
     PhotoService,
+    AuthService,
     { provide: ErrorHandler, useClass: AppErrorHandler },
     { provide: BrowserXhr, useClass: BrowserXhrWithProgress }
   ],
