@@ -10,38 +10,38 @@
                 <ul class="nav navbar-nav flex-grow">
                     <li class="nav-item" [routerLinkActive]="['link-active']"
                         [routerLinkActiveOptions]="{ exact: true }">
-                        <a class="nav-link text-dark" [routerLink]="['/']"><span class="glyphicon glyphicon-home"
-                                aria-hidden="true"></span> Home</a>
+                        <a class="nav-link text-dark" [routerLink]="['/']">
+                            <span class="fa fa-home" aria-hidden="true"></span> Home</a>
                     </li>
                     <li class="nav-item" [routerLinkActive]="['link-active']"
                         [routerLinkActiveOptions]="{ exact: true }">
                         <a class="nav-link text-dark" [routerLink]="['/vehicles']">
-                            <span class="glyphicon glyphicon-plus"></span> Vehicles</a>
+                            <span class="fa fa-car"></span> Vehicles</a>
                     </li>
                     <li class="nav-item" [routerLinkActive]="['link-active']"
                         [routerLinkActiveOptions]="{ exact: true }">
                         <a class="nav-link text-dark" [routerLink]="['/vehicles/new']">
-                            <span class="glyphicon glyphicon-plus"></span> New vehicle</a>
+                            <span class="fa fa-plus" aria-hidden="true"></span> New vehicle</a>
                     </li>
                     <!-- <li class="nav-item" [routerLinkActive]="['link-active']"> -->
-                        <!-- <a class="nav-link text-dark" [routerLink]="['/counter']">Counter</a> -->
+                    <!-- <a class="nav-link text-dark" [routerLink]="['/counter']">Counter</a> -->
                     <!-- </li> -->
                     <!-- <li class="nav-item" [routerLinkActive]="['link-active']"> -->
-                        <!-- <a class="nav-link text-dark" [routerLink]="['/fetch-data']">Fetch data</a> -->
+                    <!-- <a class="nav-link text-dark" [routerLink]="['/fetch-data']">Fetch data</a> -->
                     <!-- </li> -->
                     <li class="nav-item" [routerLinkActive]="['link-active']">
                         <a class="nav-link text-dark" [routerLink]="['/profile']">
-                            <span class="glyphicon glyphicon-user"></span> Profile</a>
+                            <span class="fa fa-user" aria-hidden="true"></span> Profile</a>
                     </li>
                     <li class="nav-item" [routerLinkActive]="['link-active']" (click)="auth.login()"
                         *ngIf="!auth.loggedIn">
                         <a class="nav-link text-dark">
-                            <span class="glyphicon glyphicon-user"></span> Login</a>
+                            <span class="fa fa-sign-in" aria-hidden="true"></span> Login</a>
                     </li>
                     <li class="nav-item" [routerLinkActive]="['link-active']" (click)="auth.logout()"
                         *ngIf="auth.loggedIn">
                         <a class="nav-link text-dark">
-                            <span class="glyphicon glyphicon-user"></span> Logout</a>
+                            <span class="fa fa-sign-out" aria-hidden="true"></span> Logout</a>
                     </li>
                 </ul>
             </div>
