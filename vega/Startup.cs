@@ -10,6 +10,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Sentry;
 using System;
+using Microsoft.AspNetCore.Http.Extensions;
 using vega.Core;
 using vega.Persistance;
 using Vega.Core.Models;
@@ -98,19 +99,20 @@ namespace vega
                 var log = context.RequestServices.GetService<ILoggerFactory>()
                     .CreateLogger<Startup>();
 
-                if (context.Request.Path == "/throw")
+                var hub = context.RequestServices.GetService<IHub>();
+                hub.ConfigureScope(s =>
                 {
-                    var hub = context.RequestServices.GetService<IHub>();
-                    hub.ConfigureScope(s =>
-                    {
                         // More data can be added to the scope like this:
                         s.SetTag("Sample", "ASP.NET Core"); // indexed by Sentry
                         s.SetExtra("Extra!", "Some extra information");
-                    });
+                });
 
-                    log.LogInformation("Logging info...");
-                    log.LogWarning("Logging some warning!");
+                var displayUrl = context.Request.GetDisplayUrl();
+                if (!displayUrl.EndsWith(".js") && !displayUrl.EndsWith(".map"))
+                    log.LogInformation($"Processing request: {context.Request.Method}, {displayUrl}");
 
+                if (context.Request.Path == "/throw")
+                {
                     // The following exception will be captured by the SDK and the event
                     // will include the Log messages and any custom scope modifications
                     // as exemplified above.
