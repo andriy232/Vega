@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using vega.Controllers.Resources;
@@ -18,6 +19,13 @@ namespace vega.Controllers
         {
             _mapper = mapper;
             _context = context;
+        }
+
+        [Authorize]
+        [HttpGet("/api/test")]
+        public IActionResult Test()
+        {
+            return Ok("authorization works");
         }
 
         [HttpGet("/api/features")]
