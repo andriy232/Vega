@@ -10,7 +10,6 @@ export class NavMenuComponent {
   isExpanded = false;
 
   constructor(private auth: AuthService) {
-    console.log(auth.loggedIn);
   }
 
   collapse() {

@@ -9,12 +9,15 @@ import { Router } from '@angular/router';
   providedIn: 'root'
 })
 export class AuthService {
+
+  private roles: string[] = [];
+
   // Create an observable of Auth0 instance of client
   auth0Client$ = (from(
     createAuth0Client({
       domain: "vega-project-ua.auth0.com",
       client_id: "ZMmmqEC2ZKlbCVm1Gc66BPSTzDLw6s0V",
-      redirect_uri: `${window.location.origin}`
+      redirect_uri: this.getCallbackUri()
     })
   ) as Observable<Auth0Client>).pipe(
     shareReplay(1), // Every subscription receives the same shared value
@@ -27,9 +30,7 @@ export class AuthService {
   // from: Convert that resulting promise into an observable
   isAuthenticated$ = this.auth0Client$.pipe(
     concatMap((client: Auth0Client) => from(client.isAuthenticated())),
-    tap(res => {
-      this.loggedIn = res;
-    })
+    tap(res => this.loggedIn = res)
   );
   handleRedirectCallback$ = this.auth0Client$.pipe(
     concatMap((client: Auth0Client) => from(client.handleRedirectCallback()))
@@ -38,6 +39,7 @@ export class AuthService {
   // Create subject and public observable of user profile data
   private userProfileSubject$ = new BehaviorSubject<any>(null);
   userProfile$ = this.userProfileSubject$.asObservable();
+
   // Create a local property for login status
   loggedIn: boolean = null;
 
@@ -51,11 +53,30 @@ export class AuthService {
 
   // When calling, options can be passed if desired
   // https://auth0.github.io/auth0-spa-js/classes/auth0client.html#getuser
-  getUser$(options?): Observable<any> {
+  public getUser$(options?): Observable<any> {
+    this.getIdToken();
     return this.auth0Client$.pipe(
       concatMap((client: Auth0Client) => from(client.getUser(options))),
       tap(user => this.userProfileSubject$.next(user))
     );
+  }
+
+  private isInRole(roleName: string): boolean {
+    return this.roles.indexOf(roleName) > -1;
+  }
+
+  public isAdmin(): boolean {
+    return this.isInRole("Admin");
+  }
+
+  public getIdToken() {
+    this.auth0Client$.subscribe((client: Auth0Client) => {
+      client.getIdTokenClaims()
+        .then(value => {
+          console.log("nick", value.nickname);
+          console.log("token", value);
+        });
+    });
   }
 
   private localAuthSetup() {
@@ -75,17 +96,21 @@ export class AuthService {
     checkAuth$.subscribe();
   }
 
-  login(redirectPath: string = '/') {
+  public login(redirectPath: string = '/') {
     // A desired redirect path can be passed to login method
     // (e.g., from a route guard)
     // Ensure Auth0 client instance exists
     this.auth0Client$.subscribe((client: Auth0Client) => {
       // Call method to log in
       client.loginWithRedirect({
-        redirect_uri: `${window.location.origin}`,
+        redirect_uri: this.getCallbackUri(),
         appState: { target: redirectPath }
       });
     });
+  }
+
+  private getCallbackUri(): string {
+    return `${window.location.origin}`;
   }
 
   private handleAuthCallback() {
@@ -111,21 +136,21 @@ export class AuthService {
       // Response will be an array of user and login status
       authComplete$.subscribe(([user, loggedIn]) => {
         // Redirect to target route after callback processing
-        console.log(user);
+        console.log("user", user);
         this.router.navigate([targetRoute]);
       });
     }
   }
 
-  logout() {
+  public logout() {
     // Ensure Auth0 client instance exists
     this.auth0Client$.subscribe((client: Auth0Client) => {
       // Call method to log out
       client.logout({
         client_id: "ZMmmqEC2ZKlbCVm1Gc66BPSTzDLw6s0V",
-        returnTo: `${window.location.origin}`
+        returnTo: this.getCallbackUri()
       });
+      this.roles = [];
     });
   }
-
 }

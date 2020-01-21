@@ -27,6 +27,7 @@ import { ViewVehicleComponent } from './view-vehicle/view-vehicle.component';
 import { PaginationComponent } from './shared/pagination.component';
 import { AppErrorHandler } from './app.error-handler';
 import { ViewProfileComponent } from './view-profile/view-profile.component';
+import { AdminComponent } from './admin/admin.component';
 
 Sentry.init({
   dsn: "https://0df0c7e86716463891cfe42dffb9130b@sentry.io/1878365"
@@ -43,7 +44,8 @@ Sentry.init({
     VehicleListComponent,
     PaginationComponent,
     ViewVehicleComponent,
-    ViewProfileComponent
+    ViewProfileComponent,
+    AdminComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -63,7 +65,8 @@ Sentry.init({
       { path: 'vehicles/edit/:id', component: VehicleFormComponent },
       { path: 'vehicles/:id', component: ViewVehicleComponent },
       { path: 'vehicles', component: VehicleListComponent },
-      { path: 'profile', component: ViewProfileComponent }
+      { path: 'profile', component: ViewProfileComponent },
+      { path: 'admin', component: AdminComponent }
     ])
   ],
   providers: [
