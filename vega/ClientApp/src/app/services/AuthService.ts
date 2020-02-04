@@ -11,12 +11,14 @@ import { Router } from '@angular/router';
 export class AuthService {
 
   private roles: string[] = [];
+  private clientId: string = "ZMmmqEC2ZKlbCVm1Gc66BPSTzDLw6s0V";
 
   // Create an observable of Auth0 instance of client
-  auth0Client$ = (from(
+  private auth0Client$ = (from(
     createAuth0Client({
       domain: "vega-project-ua.auth0.com",
-      client_id: "ZMmmqEC2ZKlbCVm1Gc66BPSTzDLw6s0V",
+      client_id: this.clientId,
+      scope: "openid sprofile email",
       redirect_uri: this.getCallbackUri()
     })
   ) as Observable<Auth0Client>).pipe(
@@ -28,20 +30,20 @@ export class AuthService {
   // For each Auth0 SDK method, first ensure the client instance is ready
   // concatMap: Using the client instance, call SDK method; SDK returns a promise
   // from: Convert that resulting promise into an observable
-  isAuthenticated$ = this.auth0Client$.pipe(
+  private isAuthenticated$ = this.auth0Client$.pipe(
     concatMap((client: Auth0Client) => from(client.isAuthenticated())),
     tap(res => this.loggedIn = res)
   );
-  handleRedirectCallback$ = this.auth0Client$.pipe(
+  private handleRedirectCallback$ = this.auth0Client$.pipe(
     concatMap((client: Auth0Client) => from(client.handleRedirectCallback()))
   );
 
   // Create subject and public observable of user profile data
   private userProfileSubject$ = new BehaviorSubject<any>(null);
-  userProfile$ = this.userProfileSubject$.asObservable();
+  public userProfile$ = this.userProfileSubject$.asObservable();
 
   // Create a local property for login status
-  loggedIn: boolean = null;
+  public loggedIn: boolean = null;
 
   constructor(private router: Router) {
     // On initial load, check authentication state with authorization server
@@ -62,19 +64,24 @@ export class AuthService {
   }
 
   private isInRole(roleName: string): boolean {
-    return this.roles.indexOf(roleName) > -1;
+    if (this.roles)
+      return this.roles.indexOf(roleName) > -1;
+    return false;
   }
 
   public isAdmin(): boolean {
     return this.isInRole("Admin");
   }
 
+  public isModerator(): boolean {
+    return this.isInRole("Moderator");
+  }
+
   public getIdToken() {
     this.auth0Client$.subscribe((client: Auth0Client) => {
       client.getIdTokenClaims()
-        .then(value => {
-          console.log("nick", value.nickname);
-          console.log("token", value);
+        .then(idToken => {
+          this.roles = idToken["https://vega.com/roles"];
         });
     });
   }
@@ -147,7 +154,7 @@ export class AuthService {
     this.auth0Client$.subscribe((client: Auth0Client) => {
       // Call method to log out
       client.logout({
-        client_id: "ZMmmqEC2ZKlbCVm1Gc66BPSTzDLw6s0V",
+        client_id: this.clientId,
         returnTo: this.getCallbackUri()
       });
       this.roles = [];
