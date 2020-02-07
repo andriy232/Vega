@@ -9,16 +9,18 @@ export class ProgressService {
 
     private uploadProgress: Subject<any>;
 
-    startTracking() {
+    startTracking(): Subject<any> {
         this.uploadProgress = new Subject();
         return this.uploadProgress;
     }
 
     notify(progress) {
-        this.uploadProgress.next(progress);
+        if (this.uploadProgress)
+            this.uploadProgress.next(progress);
     }
 
     endTracking() {
-        this.uploadProgress.complete();
+        if (this.uploadProgress)
+            this.uploadProgress.complete();
     }
 }

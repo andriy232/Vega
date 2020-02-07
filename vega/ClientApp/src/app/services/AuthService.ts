@@ -18,7 +18,8 @@ export class AuthService {
     createAuth0Client({
       domain: "vega-project-ua.auth0.com",
       client_id: this.clientId,
-      scope: "openid sprofile email",
+      scope: "openid profile email",
+      audience: "https://api.vega.com",
       redirect_uri: this.getCallbackUri()
     })
   ) as Observable<Auth0Client>).pipe(
@@ -56,7 +57,9 @@ export class AuthService {
   // When calling, options can be passed if desired
   // https://auth0.github.io/auth0-spa-js/classes/auth0client.html#getuser
   public getUser$(options?): Observable<any> {
-    this.getIdToken();
+
+    this.getRolesFromToken();
+
     return this.auth0Client$.pipe(
       concatMap((client: Auth0Client) => from(client.getUser(options))),
       tap(user => this.userProfileSubject$.next(user))
@@ -77,7 +80,7 @@ export class AuthService {
     return this.isInRole("Moderator");
   }
 
-  public getIdToken() {
+  public getRolesFromToken() {
     this.auth0Client$.subscribe((client: Auth0Client) => {
       client.getIdTokenClaims()
         .then(idToken => {
@@ -92,6 +95,8 @@ export class AuthService {
     const checkAuth$ = this.isAuthenticated$.pipe(
       concatMap((loggedIn: boolean) => {
         if (loggedIn) {
+
+          this.setToken();
           // If authenticated, get user and set in app
           // NOTE: you could pass options here if needed
           return this.getUser$();
@@ -101,6 +106,15 @@ export class AuthService {
       })
     );
     checkAuth$.subscribe();
+  }
+
+  private setToken() {
+    this.auth0Client$.subscribe((client: Auth0Client) => {
+      client.getTokenSilently()
+        .then(token => {
+          localStorage.setItem("access_token", token);
+        });
+    });
   }
 
   public login(redirectPath: string = '/') {

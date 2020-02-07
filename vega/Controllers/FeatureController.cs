@@ -21,13 +21,6 @@ namespace vega.Controllers
             _context = context;
         }
 
-        [Authorize]
-        [HttpGet("/api/test")]
-        public IActionResult Test()
-        {
-            return Ok("authorization works");
-        }
-
         [HttpGet("/api/features")]
         public async Task<IEnumerable<KeyValuePairResource>> GetFeatures()
         {

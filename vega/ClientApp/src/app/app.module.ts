@@ -2,16 +2,17 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatNativeDateModule } from '@angular/material/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { NgModule, ErrorHandler } from '@angular/core';
 import { HttpModule, BrowserXhr } from '@angular/http';
 import { MatTabsModule } from '@angular/material/tabs';
 import { RouterModule } from '@angular/router';
 import { ToastyModule } from 'ng2-toasty';
 import * as Sentry from '@sentry/browser';
+import { JwtModule } from "@auth0/angular-jwt";
 
-import { BrowserXhrWithProgress } from './services/BrowserXhrWithProgress';
-import { ProgressService } from "./services/ProgressService";
+import { AdminAuthGuardService } from './services/AdminAuthGuardService';
+import { AuthGuardService } from './services/AuthGuardService';
 import { VehicleService } from "./services/VehicleService";
 import { PhotoService } from "./services/PhotoService";
 import { AuthService } from "./services/AuthService";
@@ -28,6 +29,10 @@ import { PaginationComponent } from './shared/pagination.component';
 import { AppErrorHandler } from './app.error-handler';
 import { ViewProfileComponent } from './view-profile/view-profile.component';
 import { AdminComponent } from './admin/admin.component';
+
+export function tokenGetter() {
+  return localStorage.getItem("access_token");
+}
 
 Sentry.init({
   dsn: "https://0df0c7e86716463891cfe42dffb9130b@sentry.io/1878365"
@@ -57,6 +62,12 @@ Sentry.init({
     FormsModule,
     BrowserAnimationsModule,
     ReactiveFormsModule,
+    JwtModule.forRoot({
+      config: {
+        tokenGetter: tokenGetter,
+        whitelistedDomains: ["localhost:5001"]
+      }
+    }),
     RouterModule.forRoot([
       { path: '', redirectTo: 'vehicles', pathMatch: 'full' },
       { path: 'counter', component: CounterComponent },
@@ -66,16 +77,16 @@ Sentry.init({
       { path: 'vehicles/:id', component: ViewVehicleComponent },
       { path: 'vehicles', component: VehicleListComponent },
       { path: 'profile', component: ViewProfileComponent },
-      { path: 'admin', component: AdminComponent }
+      { path: 'admin', component: AdminComponent, canActivate: [AdminAuthGuardService] }
     ])
   ],
   providers: [
     VehicleService,
-    ProgressService,
     PhotoService,
     AuthService,
-    { provide: ErrorHandler, useClass: AppErrorHandler },
-    { provide: BrowserXhr, useClass: BrowserXhrWithProgress }
+    AuthGuardService,
+    AdminAuthGuardService,
+    { provide: ErrorHandler, useClass: AppErrorHandler }
   ],
   bootstrap: [AppComponent]
 })

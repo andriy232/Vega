@@ -1,3 +1,4 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Http } from '@angular/http';
 import 'rxjs/add/operator/map';
@@ -10,7 +11,7 @@ export class VehicleService {
 
     private readonly vehicleEndpoint = '/api/vehicles';
 
-    constructor(private http: Http) {
+    constructor(private http: Http, private httpClient: HttpClient) {
     }
 
     getFeatures() {
@@ -24,18 +25,15 @@ export class VehicleService {
     }
 
     create(vehicle) {
-        return this.http.post(this.vehicleEndpoint, vehicle)
-            .map(res => res.json());
+        return this.httpClient.post(this.vehicleEndpoint, vehicle);
     }
 
     update(vehicle: SaveVehicle) {
-        return this.http.put(`${this.vehicleEndpoint}/${vehicle.id}`, vehicle)
-            .map(res => res.json());
+        return this.httpClient.put(`${this.vehicleEndpoint}/${vehicle.id}`, vehicle);
     }
 
     deleteVehicle(id) {
-        return this.http.delete(`${this.vehicleEndpoint}/${id}`)
-            .map(res => res.json());
+        return this.httpClient.delete(`${this.vehicleEndpoint}/${id}`);
     }
 
     getVehicle(id) {
