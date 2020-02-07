@@ -14,13 +14,11 @@
             </div>
         </div>
         <div class="col-sm">
-          <p>
-            <a class="btn btn-light" (click)="resetFilter()">Reset</a>
-          </p>
+            <button type="button" class="btn btn-secondary" (click)="resetFilter()">Reset</button>
         </div>
         <div class="col-sm">
-            <p>
-                <a [routerLink]="['/vehicles/new']" class="btn btn-primary">New Vehicle</a>
+            <p *ngIf="auth.loggedIn">
+                <button type="button" [routerLink]="['/vehicles/new']" class="btn btn-primary">New Vehicle</button>
             </p>
         </div>
     </div>
@@ -51,4 +49,5 @@
         </tr>
     </tbody>
 </table>
-<pagination [total-items]="queryResult.totalItems" [page-size]="query.pageSize" (page-changed)="onPageChange($event)"></pagination>
+<pagination [total-items]="queryResult.totalItems" [page-size]="query.pageSize" (page-changed)="onPageChange($event)">
+</pagination>

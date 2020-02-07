@@ -21,21 +21,21 @@
         </ul>
         <br />
         <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
-            <div class="btn-group mr-2" role="group" aria-label="First group">
-                <button class="btn btn-primary" [routerLink]="['/vehicles/edit/', vehicle.id]">Edit</button>
+            <div *ngIf="auth.loggedIn" class="btn-group mr-2" role="group" aria-label="First group">
+                <button class="btn btn-warning" [routerLink]="['/vehicles/edit/', vehicle.id]">Edit</button>
             </div>
-            <div class="btn-group mr-2" role="group" aria-label="Second group">
+            <div *ngIf="auth.loggedIn" class="btn-group mr-2" role="group" aria-label="Second group">
                 <button class="btn btn-danger" (click)="delete()">Delete</button>
             </div>
             <div class="btn-group mr-2" role="group" aria-label="Third group">
-                <button class="btn btn-light" [routerLink]="['/vehicles']">View All Vehicles</button>
+                <button class="btn btn-secondary" [routerLink]="['/vehicles']">View All Vehicles</button>
             </div>
         </div>
     </mat-tab>
     <mat-tab label="Photos">
         <!-- Photos tab -->
         <h2>Photos</h2>
-        <input type="file" (change)="uploadPhoto()" #fileInput>
+        <input *ngIf="auth.loggedIn" type="file" (change)="uploadPhoto()" #fileInput>
         <div class="progress" *ngIf="progress && progress.percentage < 100">
             <div class="progress-bar" [style.width]="progress.percentage + '%'">
                 <span class="sr-only">{{ progress.percentage }}% Complete</span>

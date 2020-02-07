@@ -1,3 +1,4 @@
+import { AuthService } from './../services/AuthService';
 import { ProgressService } from './../services/ProgressService';
 import { PhotoService } from './../services/PhotoService';
 import { Component, OnInit, ElementRef, ViewChildren, QueryList, NgZone } from '@angular/core';
@@ -34,6 +35,7 @@ export class ViewVehicleComponent implements OnInit {
     private vehicleService: VehicleService,
     private progressService: ProgressService,
     private photoService: PhotoService,
+    private auth: AuthService,
     private zone: NgZone) {
 
     route.params.subscribe(p => {

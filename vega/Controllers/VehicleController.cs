@@ -70,8 +70,8 @@ namespace vega.Controllers
             ]
         }
         */
-        [Authorize]
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> CreateVehicle([FromBody] SaveVehicleResource vehicleResource)
         {
             if (!ModelState.IsValid)

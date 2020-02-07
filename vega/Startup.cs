@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Http.Extensions;
 using vega.Core;
 using vega.Persistance;
 using Vega.Core.Models;
+using vega.Controllers;
 
 namespace vega
 {
@@ -49,6 +50,12 @@ namespace vega
                 options.Authority = Configuration["Auth0:Domain"];
                 options.Audience = Configuration["Auth0:Audience"];
             });
+
+            services.AddAuthorization(options =>
+                {
+                    options.AddPolicy(Policies.RequireAdminRole, policy =>
+                        policy.RequireClaim("https://vega.com/roles", "Admin"));
+                });
 
             services.AddControllers().AddNewtonsoftJson();
             // In production, the Angular files will be served from this directory
@@ -102,9 +109,9 @@ namespace vega
                 var hub = context.RequestServices.GetService<IHub>();
                 hub.ConfigureScope(s =>
                 {
-                        // More data can be added to the scope like this:
-                        s.SetTag("Sample", "ASP.NET Core"); // indexed by Sentry
-                        s.SetExtra("Extra!", "Some extra information");
+                    // More data can be added to the scope like this:
+                    s.SetTag("Sample", "ASP.NET Core"); // indexed by Sentry
+                    s.SetExtra("Extra!", "Some extra information");
                 });
 
                 var displayUrl = context.Request.GetDisplayUrl();
