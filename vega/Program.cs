@@ -1,8 +1,9 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using vega;
 
-namespace vega
+namespace Vega
 {
     public class Program
     {
@@ -13,7 +14,7 @@ namespace vega
 
         public static IHostBuilder CreateHostBuilder(string[] args)
         {
-            return Host.CreateDefaultBuilder(args)
+            var builder = Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseSentry();
@@ -24,6 +25,8 @@ namespace vega
                     logging.ClearProviders();
                     logging.AddConsole();
                 });
+
+            return builder;
         }
     }
 }

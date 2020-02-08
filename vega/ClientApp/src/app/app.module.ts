@@ -2,14 +2,15 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatNativeDateModule } from '@angular/material/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
+import { HttpClientModule } from '@angular/common/http';
 import { NgModule, ErrorHandler } from '@angular/core';
-import { HttpModule, BrowserXhr } from '@angular/http';
 import { MatTabsModule } from '@angular/material/tabs';
 import { RouterModule } from '@angular/router';
+import { HttpModule } from '@angular/http';
 import { ToastyModule } from 'ng2-toasty';
 import * as Sentry from '@sentry/browser';
 import { JwtModule } from "@auth0/angular-jwt";
+import { ChartModule } from "angular2-chartjs";
 
 import { AdminAuthGuardService } from './services/AdminAuthGuardService';
 import { AuthGuardService } from './services/AuthGuardService';
@@ -58,6 +59,7 @@ Sentry.init({
     ToastyModule.forRoot(),
     MatTabsModule,
     MatNativeDateModule,
+    ChartModule,
     HttpModule,
     FormsModule,
     BrowserAnimationsModule,

@@ -2,6 +2,7 @@ using AutoMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -10,11 +11,10 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Sentry;
 using System;
-using Microsoft.AspNetCore.Http.Extensions;
-using vega.Core;
-using vega.Persistance;
+using Vega.Controllers;
+using Vega.Core;
 using Vega.Core.Models;
-using vega.Controllers;
+using Vega.Persistance;
 
 namespace vega
 {
@@ -34,12 +34,15 @@ namespace vega
 
             services.Configure<PhotoSettings>(Configuration.GetSection("PhotoSettings"));
 
-            var connectionString = Configuration.GetConnectionString("Default");
+            // from User Secrtes - added by Host.CreateDefaultBuilder
+            var connectionString = Configuration["ConnectionStrings:Default"];
             services.AddDbContext<VegaDbContext>(options => options.UseSqlServer(connectionString));
 
             services.AddScoped<IVehicleRepository, VehicleRepository>();
             services.AddScoped<IPhotoRepository, PhotoRepository>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
+            services.AddTransient<IPhotoManager, PhotoManager>();
+            services.AddTransient<IPhotoStorage, FileSystemPhotoStorage>();
 
             services.AddAuthentication(options =>
             {
@@ -52,10 +55,10 @@ namespace vega
             });
 
             services.AddAuthorization(options =>
-                {
-                    options.AddPolicy(Policies.RequireAdminRole, policy =>
-                        policy.RequireClaim("https://vega.com/roles", "Admin"));
-                });
+            {
+                options.AddPolicy(Policies.RequireAdminRole, policy =>
+                    policy.RequireClaim("https://vega.com/roles", "Admin"));
+            });
 
             services.AddControllers().AddNewtonsoftJson();
             // In production, the Angular files will be served from this directory
