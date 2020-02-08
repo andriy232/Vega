@@ -2,10 +2,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using vega.Core;
+using Vega.Core;
 using Vega.Core.Models;
 
-namespace vega.Persistance
+namespace Vega.Persistance
 {
     public class PhotoRepository : IPhotoRepository
     {
