@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace vega.Controllers.Resources
+namespace Vega.Controllers.Resources
 {
     public class QueryResultResource<T>
     {

@@ -1,9 +1,9 @@
-using AutoMapper;
-using vega.Controllers.Resources;
 using System.Linq;
+using AutoMapper;
+using Vega.Controllers.Resources;
 using Vega.Core.Models;
 
-namespace vega.Mapping
+namespace Vega.Mapping
 {
     public class MappingProfile : Profile
     {

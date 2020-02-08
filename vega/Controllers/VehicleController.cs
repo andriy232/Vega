@@ -1,13 +1,13 @@
+using System;
+using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Threading.Tasks;
-using vega.Controllers.Resources;
-using vega.Core;
+using Vega.Controllers.Resources;
+using Vega.Core;
 using Vega.Core.Models;
 
-namespace vega.Controllers
+namespace Vega.Controllers
 {
     [Route("/api/vehicles")]
     public class VehicleController : Controller

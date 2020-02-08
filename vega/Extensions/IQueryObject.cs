@@ -1,4 +1,4 @@
-namespace vega.Extensions
+namespace Vega.Extensions
 {
     public interface IQueryObject
     {

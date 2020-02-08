@@ -4,11 +4,11 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using vega.Core;
+using Vega.Core;
 using Vega.Core.Models;
-using vega.Extensions;
+using Vega.Extensions;
 
-namespace vega.Persistance
+namespace Vega.Persistance
 {
     public class VehicleRepository : IVehicleRepository
     {
@@ -59,19 +59,13 @@ namespace vega.Persistance
         {
             var queryItems = _context.Vehicles
                 .Include(v => v.Model).ThenInclude(m => m.Make)
-                .Include(v => v.Features).ThenInclude(vf => vf.Feature)
                 .AsQueryable();
 
             if (queryObj != null)
-            {
-                if (queryObj.MakeId.HasValue)
-                    queryItems = queryItems.Where(v => v.Model.MakeId == queryObj.MakeId.Value);
+                queryItems = queryItems.ApplyFiltering(queryObj);
 
-                if (queryObj.ModelId.HasValue)
-                    queryItems = queryItems.Where(v => v.Model.Id == queryObj.ModelId.Value);
-
+            if (queryObj != null)
                 queryItems = queryItems.ApplyOrdering(queryObj, _columnsMap);
-            }
 
             var result = new QueryResult<Vehicle>
             {
@@ -79,9 +73,7 @@ namespace vega.Persistance
             };
 
             if (queryObj != null)
-            {
                 queryItems = queryItems.ApplyPaging(queryObj);
-            }
 
             result.Items = await queryItems.ToListAsync();
             return result;

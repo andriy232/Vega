@@ -2,8 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using Vega.Core.Models;
 
-namespace vega.Extensions
+namespace Vega.Extensions
 {
     public static class IQueryableExtensions
     {
@@ -14,6 +15,17 @@ namespace vega.Extensions
         {
             if (!string.IsNullOrWhiteSpace(queryObj?.SortBy) && columnsMap.TryGetValue(queryObj.SortBy, out var exp))
                 query = queryObj.IsSortAscending ? query.OrderBy(exp) : query.OrderByDescending(exp);
+
+            return query;
+        }
+
+        public static IQueryable<Vehicle> ApplyFiltering(this IQueryable<Vehicle> query, VehicleQuery queryObj)
+        {
+            if (queryObj != null && queryObj.MakeId.HasValue)
+                query = query.Where(v => v.Model.MakeId == queryObj.MakeId.Value);
+
+            if (queryObj != null && queryObj.ModelId.HasValue)
+                query = query.Where(v => v.Model.Id == queryObj.ModelId.Value);
 
             return query;
         }

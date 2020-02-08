@@ -3,11 +3,11 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using vega.Controllers.Resources;
+using Vega.Controllers.Resources;
 using Vega.Core.Models;
-using vega.Persistance;
+using Vega.Persistance;
 
-namespace vega.Controllers
+namespace Vega.Controllers
 {
     public class MakesController : Controller
     {

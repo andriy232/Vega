@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace vega.Controllers
+namespace Vega.Controllers
 {
     public class TestController : Controller
     {

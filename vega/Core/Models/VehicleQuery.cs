@@ -1,4 +1,4 @@
-﻿using vega.Extensions;
+﻿using Vega.Extensions;
 
 namespace Vega.Core.Models
 {
