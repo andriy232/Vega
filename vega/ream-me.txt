@@ -1,0 +1,5 @@
+to build image:
+docker build -t vega_image .
+
+to create container:
+docker run -it -p 80:80 --env ASPNETCORE_CONNECTIONSTRINGS_VEGA="server=192.168.1.210,1433; database=vega; user id=SA; password=MyComplexPassword!234" --rm --name Vega vega_image

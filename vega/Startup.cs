@@ -35,7 +35,10 @@ namespace vega
             services.Configure<PhotoSettings>(Configuration.GetSection("PhotoSettings"));
 
             // from User Secrtes - added by Host.CreateDefaultBuilder
-            var connectionString = Configuration["ConnectionStrings:Default"];
+            var connectionString = Configuration["ASPNETCORE_CONNECTIONSTRINGS_VEGA"];
+            if (connectionString[0] == connectionString[connectionString.Length - 1])
+                connectionString = connectionString.Substring(1, connectionString.Length - 2);
+            Console.WriteLine($"Connection string: {connectionString}");
             services.AddDbContext<VegaDbContext>(options => options.UseSqlServer(connectionString));
 
             services.AddScoped<IVehicleRepository, VehicleRepository>();
