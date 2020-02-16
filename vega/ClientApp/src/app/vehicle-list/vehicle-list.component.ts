@@ -27,7 +27,7 @@ export class VehicleListComponent implements OnInit {
   ];
 
   constructor(private vehicleService: VehicleService,
-    private auth: AuthService) {
+    public auth: AuthService) {
 
   }
 

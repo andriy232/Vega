@@ -9,7 +9,7 @@ import { Component } from '@angular/core';
 export class NavMenuComponent {
   isExpanded = false;
 
-  constructor(private auth: AuthService) {
+  constructor(public auth: AuthService) {
   }
 
   collapse() {
